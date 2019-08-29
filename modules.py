@@ -41,6 +41,12 @@ def extract_feature(y, sr):
     return mel1, mel2, mel3, mel4
 
 
+def extract_feature_1ch(y, sr):
+    mel = librosa.feature.melspectrogram(y, sr=sr, n_fft=1024, n_mels=40, hop_length=320, power=1, fmax=16000)
+    mel = np.log10(np.maximum(mel, 0.000001)).T
+    return mel
+
+
 def plot_figure(mat, title):
     plt.figure(figsize=(10, 4))
     display.specshow(librosa.amplitude_to_db(mat, ref=np.max), y_axis='linear', x_axis='time')
@@ -73,6 +79,19 @@ def to_hdf5(path, meta, mode):
             data1[i], data2[i], data3[i], data4[i] = extract_feature(y, sr)
             # librosa.output.write_wav('test.wav', y.T, sr)
             # plot_figure(y, "Testfile")
+
+
+def to_hdf5_ver2(path, meta, mode):
+    with h5py.File(path+'%s.hdf5' % mode) as f1:
+        f1.create_dataset('data', (len(meta)-1, 501, 40), dtype='float32')
+
+        data = f1['data']
+
+        for i in range(len(meta)-1):
+            cutoff = 1000
+            y, sr = librosa.load('D:/DCASE 2018 Dataset/DCASE2018-task5-dev/' + meta[i][0], mono=True, sr=16000)
+            y = HPF(y, sr, cutoff)
+            data[i] = extract_feature_1ch(y, sr)
 
 
 def HPF(y, sr, cutoff, order=8):

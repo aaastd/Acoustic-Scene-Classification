@@ -69,34 +69,32 @@ def calc_prob(x_test, fold_num, ch):
         minmax_scale(x_test[i], feature_range=(0, 1), axis=0)
     x_test = x_test.reshape(x_test.shape[0], x_test.shape[1], x_test.shape[2], 1).astype(np.float64)
 
-    loaded1 = cnn_model()
-    loaded1.load_weights('model2/Fold%d_ch1_Model.h5' % fold_num)
-    loaded2 = cnn_model()
-    loaded2.load_weights('model2/Fold%d_ch2_Model.h5' % fold_num)
-    loaded3 = cnn_model()
-    loaded3.load_weights('model2/Fold%d_ch3_Model.h5' % fold_num)
-    loaded4 = cnn_model()
-    loaded4.load_weights('model2/Fold%d_ch4_Model.h5' % fold_num)
-
-    pred1 = compile_model(loaded1, x_test)
-    pred2 = compile_model(loaded2, x_test)
-    pred3 = compile_model(loaded3, x_test)
-    pred4 = compile_model(loaded4, x_test)
-    print(pred1.shape)
-    print(pred1)
-
-    # # prediction 실행 부분
-    # model1 = load_model('model2/fold%d_ch1_model.h5' % fold_num)
-    # model2 = load_model('model2/fold%d_ch2_model.h5' % fold_num)
-    # model3 = load_model('model2/fold%d_ch3_model.h5' % fold_num)
-    # model4 = load_model('model2/f+old%d_ch4_model.h5' % fold_num)
+    # loaded1 = cnn_model()
+    # loaded1.load_weights('model3/Fold%d_ch1_Model.h5' % fold_num)
+    # loaded2 = cnn_model()
+    # loaded2.load_weights('model3/Fold%d_ch2_Model.h5' % fold_num)
+    # loaded3 = cnn_model()
+    # loaded3.load_weights('model3/Fold%d_ch3_Model.h5' % fold_num)
+    # loaded4 = cnn_model()
+    # loaded4.load_weights('model3/Fold%d_ch4_Model.h5' % fold_num)
     #
-    # print("Fold%d_%s is in process..." % (fold_num, ch))
-    #
-    # pred1 = model1.predict_proba(x_test)
-    # pred2 = model2.predict_proba(x_test)
-    # pred3 = model3.predict_proba(x_test)
-    # pred4 = model4.predict_proba(x_test)
+    # pred1 = compile_model(loaded1, x_test)
+    # pred2 = compile_model(loaded2, x_test)
+    # pred3 = compile_model(loaded3, x_test)
+    # pred4 = compile_model(loaded4, x_test)
+
+    # prediction 실행 부분
+    model1 = load_model(path3+'fold%d_ch1_model.h5' % fold_num)
+    model2 = load_model(path3+'fold%d_ch2_model.h5' % fold_num)
+    model3 = load_model(path3+'fold%d_ch3_model.h5' % fold_num)
+    model4 = load_model(path3+'fold%d_ch4_model.h5' % fold_num)
+
+    print("Fold%d_%s is in process..." % (fold_num, ch))
+
+    pred1 = model1.predict_proba(x_test)
+    pred2 = model2.predict_proba(x_test)
+    pred3 = model3.predict_proba(x_test)
+    pred4 = model4.predict_proba(x_test)
 
     merge = (1/4)*(pred1 + pred2 + pred3 + pred4)
 
