@@ -42,9 +42,10 @@ def model(fold_num, ch):
     train_path = 'C:/Users/MIN/PycharmProjects/Ai Flagship/augment_by_mels/'
 
     # meta_train = read_meta("C:/Users/MIN/PycharmProjects/ETRI/notch_filter/fold%d_train.txt" % fold_num)
-    meta_train = read_meta('F:/DCASE2018/fixed variable/fold%d_train.txt' % fold_num)
-    meta_train = meta_train[:-2]
-    print(len(meta_train))
+    # meta_train = read_meta('D:/DCASE 2018 Dataset/Development dataset/DCASE2018-task5-dev/evaluation_setup/fold%d_train.txt' % fold_num)
+    meta_train = read_meta('E:/notch #2/fold%d_train.txt' % fold_num)
+    # meta_train = meta_train[:-2]
+    # print(len(meta_train))
     meta_evaluate = read_meta(path + "evaluation_setup/fold%d_evaluate.txt" % fold_num)
     y_tmp1, y_tmp2 = [], []
 
@@ -52,16 +53,14 @@ def model(fold_num, ch):
     # train_x = HDF5Matrix('E:/ETRI/DCASE2018/feature/fold%d_train_%s.hdf5' % (fold_num, ch), 'data')
     # train_x = np.load(path + 'feature_extraction_5/fold%d_%s_train.npy' % (fold_num, ch))
     # train_x = from_hdf5('E:/ETRI/DCASE2018/feature/fold%d_train_%s.hdf5' % (fold_num, ch), 'data')
-    train_x = from_hdf5('F:/DCASE2018/fixed variable/fold%d_train.hdf5' % fold_num, 'data')
+    # train_x = from_hdf5('F:/DCASE2018/fixed variable/fold%d_train.hdf5' % fold_num, 'data')
+    train_x = from_hdf5('E:/notch #2/fold%d_train.hdf5' % fold_num, 'data')
     train_y = np.zeros([len(train_x), ])
     print(len(train_x))
     tmp_mat = train_x[60452:60462, :, :]
-    print(train_x[len(meta_train)-1])
-    for i in range(0, len(train_x)-1):
+    for i in range(0, len(train_x)-2):
 
         train_y[i] = cat(meta_train[i])
-
-    print(train_y)
 
     # Evaluate set 데이터 불러오기, 정답지 생성
     te = np.load(path + 'feature_extraction_2/%s/fold%d_%s_evaluate.npy' % (ch, fold_num, ch))
@@ -126,7 +125,7 @@ def model(fold_num, ch):
     early_stopping = EarlyStopping(monitor='val_loss', patience=10, verbose=2, mode='min')
 
     # Model checkpoint, 가장 좋은 성능일 때의 모델을 저장
-    pa = 'F:/DCASE2018/fixed variable/model/'
+    pa = 'E:/notch #2/'
     if not os.path.exists(pa):
         os.mkdir(pa)
     model_path = pa + 'fold%d_%s_model.h5' % (fold_num, ch)
@@ -149,7 +148,7 @@ def model(fold_num, ch):
 
 
 # 학습과정 그리기
-for fold in range(3, 4):
+for fold in range(1, 5):
     draw_plot(model(fold, 'ch1'), fold, 'ch1')
     # for i in range(1, 5):
     #     ch = "ch%d" % i

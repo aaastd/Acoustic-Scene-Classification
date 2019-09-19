@@ -34,9 +34,11 @@ def to_hdf5(path, meta, mode, channel):
             data[i] = extract_feature('D:/DCASE 2018 Dataset/DCASE2018-task5-dev/' + meta[i][0], channel)
 
 
-save_path = 'E:/ETRI/DCASE2018/'
+# save_path = 'E:/ETRI/DCASE2018/'
+save_path = 'F:/DCASE2018/notch #2/'
 
-for fold_num in range(1, 2):
-    meta = read_meta('C:/Users/MIN/PycharmProjects/ETRI/notch_filter/fold%d_train.txt' % fold_num)
+for fold_num in range(1, 5):
+    # meta = read_meta('C:/Users/MIN/PycharmProjects/ETRI/notch_filter/fold%d_train.txt' % fold_num)
+    meta = read_meta('D:/DCASE 2018 Dataset/Development dataset/DCASE2018-task5-dev/evaluation_setup/fold%d_train.txt' % fold_num)
     for channel in range(1, 2):
         to_hdf5(save_path, meta, 'fold%d_train' % fold_num, channel)
