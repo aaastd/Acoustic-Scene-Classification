@@ -1,6 +1,7 @@
 import librosa
 import h5py
 import numpy as np
+from modules import extract_feature_1ch
 
 
 def read_meta(filename):
@@ -26,19 +27,22 @@ def extract_feature(filename, channel):
 
 
 def to_hdf5(path, meta, mode, channel):
-    with h5py.File(path+'feature/%s_ch%d.hdf5' % (mode, channel)) as f:
+    with h5py.File(path+'%s.hdf5' % (mode)) as f:
         f.create_dataset('data', (len(meta)-1, 501, 40), dtype='float32')
         data = f['data']
         for i in range(len(meta)-1):
-            print("%s/ch%d/%d/%d" % (mode, channel, i, len(meta)-1))
-            data[i] = extract_feature('D:/DCASE 2018 Dataset/DCASE2018-task5-dev/' + meta[i][0], channel)
-
+            # data[i] = extract_feature('D:/DCASE 2018 Dataset/DCASE2018-task5-dev/' + meta[i][0], channel)
+            y, sr = librosa.load('E:/DCASE2018/eval/DCASE2018-task5-eval/' + meta[i][0], mono=True, sr=16000)
+            data[i] = extract_feature_1ch(y, sr)
 
 # save_path = 'E:/ETRI/DCASE2018/'
-save_path = 'F:/DCASE2018/notch #2/'
+save_path = 'F:/DCASE2018/evaluation/'
 
-for fold_num in range(1, 5):
-    # meta = read_meta('C:/Users/MIN/PycharmProjects/ETRI/notch_filter/fold%d_train.txt' % fold_num)
-    meta = read_meta('D:/DCASE 2018 Dataset/Development dataset/DCASE2018-task5-dev/evaluation_setup/fold%d_train.txt' % fold_num)
-    for channel in range(1, 2):
-        to_hdf5(save_path, meta, 'fold%d_train' % fold_num, channel)
+meta = read_meta('E:/DCASE2018/eval/DCASE2018-task5-eval.meta/DCASE2018-task5-eval/unknown_mic_meta.txt')
+to_hdf5(save_path, meta, 'eval_unknown', 1)
+
+# for fold_num in range(1, 5):
+#     # meta = read_meta('C:/Users/MIN/PycharmProjects/ETRI/notch_filter/fold%d_train.txt' % fold_num)
+#     meta = read_meta('D:/DCASE 2018 Dataset/Development dataset/DCASE2018-task5-dev/evaluation_setup/fold%d_train.txt' % fold_num)
+#     for channel in range(1, 2):
+#         to_hdf5(save_path, meta, 'fold%d_train' % fold_num, channel)
