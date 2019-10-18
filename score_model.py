@@ -86,13 +86,14 @@ def calc_prob(x_test, fold_num, ch):
     # pred4 = compile_model(loaded4, x_test)
 
     # prediction 실행 부분
-    model1 = load_model(path3+'fold%d_ch1_model.h5' % fold_num)
+    model1 = load_model('F:/DCASE2018/DA_Gaussian/model/fold%d_ch1_model.h5' % fold_num)
+    # model1 = load_model(path3+'fold%d_ch1_model.h5' % fold_num)
     # model2 = load_model(path3+'fold%d_ch2_model.h5' % fold_num)
     # model3 = load_model(path3+'fold%d_ch3_model.h5' % fold_num)
     # model4 = load_model(path3+'fold%d_ch4_model.h5' % fold_num)
 
     print("Fold%d_%s is in process..." % (fold_num, ch))
-
+    print(x_test.shape)
     pred1 = model1.predict_proba(x_test)
     # pred2 = model2.predict_proba(x_test)
     # pred3 = model3.predict_proba(x_test)
@@ -111,10 +112,12 @@ def run_model(fold_num):
     path = 'D:/DCASE 2018 Dataset/Development dataset/DCASE2018-task5-dev/'
     path2 = 'E:/ETRI/DCASE2018/feature2/'
 
-    meta = read_meta(path + "evaluation_setup/fold%d_test.txt" % fold_num)
+    # meta = read_meta(path + "evaluation_setup/fold%d_test.txt" % fold_num)
+    test_meta = read_meta('F:/DCASE2018/evaluation/unknown_mic_meta.txt')
     meta_origin = read_meta(path + 'meta.txt')
 
-    x_test1 = from_hdf5(path2+'fold%d_test_ch%d.hdf5' %(fold_num, 1), 'data%d' % 1)
+    x_test1 = from_hdf5('F:/DCASE2018/evaluation/eval_unknown.hdf5', 'data')
+    # x_test1 = from_hdf5(path2+'fold%d_test_ch%d.hdf5' %(fold_num, 1), 'data%d' % 1)
     # x_test2 = from_hdf5(path2+'fold%d_test_ch%d.hdf5' %(fold_num, 2), 'data%d' % 2)
     # x_test3 = from_hdf5(path2+'fold%d_test_ch%d.hdf5' %(fold_num, 3), 'data%d' % 3)
     # x_test4 = from_hdf5(path2+'fold%d_test_ch%d.hdf5' %(fold_num, 4), 'data%d' % 4)
@@ -124,10 +127,13 @@ def run_model(fold_num):
     y_test = np.zeros([len(x_test1), ], dtype=int)
     # y_tmp = []
     for i in range(0, len(x_test1) - 1):
-        ans = find_answer(meta_origin, meta[i][0])
-        y_test[i] = ans
+
+        y_test[i] = cat(test_meta[i])
+
+        # ans = find_answer(meta_origin, meta[i][0])
+        # y_test[i] = ans
         # y_tmp.append(find_answer(meta_origin, meta[i][0]))
-        cnt_ans[ans] += 1
+        # cnt_ans[ans] += 1
 
     # y_test = np.array(y_tmp)
 
@@ -161,10 +167,11 @@ def run_model(fold_num):
     #     prediction[cnt] = np.argmax(add_pre[cnt])
 
     # print(len(prediction))
-    text = open('single_fold%d_result.txt' % fold_num, 'at')
-    for x in range(0, len(meta) - 1):
-        text.write("%s\t%s\t%s\n" % (meta[x][0], list_to_string(y_test[x]), list_to_string(predict[x])))
-    text.close()
+    # text = open('single_fold%d_result.txt' % fold_num, 'at')
+    # for x in range(0, len(meta) - 1):
+    #     text.write("%s\t%s\t%s\n" % (meta[x][0], list_to_string(y_test[x]), list_to_string(predict[x])))
+    # text.close()
+
     # # f1_score 함수에 넣기 위해서 형 변환
     # y_pred = MultiLabelBinarizer().fit_transform(predict)
     # y_test = MultiLabelBinarizer().fit_transform(y_test)
