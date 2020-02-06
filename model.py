@@ -2,7 +2,7 @@ import os
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import minmax_scale
 from keras.utils.np_utils import to_categorical
-from keras.utils.training_utils import multi_gpu_model
+# from keras.utils.training_utils import multi_gpu_model
 from keras.models import Sequential
 from keras.layers import *
 from keras import optimizers
@@ -11,6 +11,7 @@ from keras.callbacks import ModelCheckpoint
 from modules import read_meta
 from modules import cat
 from modules import from_hdf5
+import numpy as np
 
 
 def draw_plot(model, fold, ch):
@@ -23,12 +24,12 @@ def draw_plot(model, fold, ch):
     loss_ax.plot(hist.history['loss'], 'y', label='train loss')
 
     loss_ax.plot(hist.history['val_loss'], 'r', label='val loss')
-    acc_ax.plot(hist.history['acc'], 'b', label='train acc')
-    acc_ax.plot(hist.history['val_acc'], 'g', label='val acc')
+    acc_ax.plot(hist.history['accuracy'], 'b', label='train acc')
+    acc_ax.plot(hist.history['val_accuracy'], 'g', label='val acc')
 
     loss_ax.set_xlabel('epoch')
     loss_ax.set_ylabel('loss')
-    acc_ax.set_ylabel('accuray')
+    acc_ax.set_ylabel('accuracy')
 
     loss_ax.legend(loc='lower left')
     acc_ax.legend(loc='upper left')
@@ -46,10 +47,12 @@ def model(fold_num, ch):
     #                        'fold%d_train.txt' % fold_num)
     # meta_train = read_meta('D:/DCASE 2018 Dataset/Development dataset/DCASE2018-task5-dev/feature_extraction_5/'
     #                        'fold%d_train.txt' % fold_num)
-    meta_train = read_meta('F:/DCASE2018/DA_%s/fold%d_train.txt' % (DA_mode, fold_num))
+    # meta_train = read_meta('F:/DCASE2018/DA_%s/fold%d_train.txt' % (DA_mode, fold_num))
     # meta_train = meta_train[:-2]
+    meta_train = read_meta('C:/Users/MIN/PycharmProjects/youtube/re_2_meta/fold%d_train.txt' % fold_num)
     # print(len(meta_train))
-    meta_evaluate = read_meta(path + "evaluation_setup/fold%d_evaluate.txt" % fold_num)
+    # meta_evaluate = read_meta(path + "evaluation_setup/fold%d_evaluate.txt" % fold_num)
+    meta_evaluate = read_meta("C:/Users/MIN/PycharmProjects/youtube/re_2_meta/fold%d_evaluate.txt" % fold_num)
     y_tmp1, y_tmp2 = [], []
 
     # Train set 데이터 불러오기, 정답지 생성
@@ -57,7 +60,7 @@ def model(fold_num, ch):
     #                   'fold%d_%s_train.npy' % (fold_num, ch))
     # train_x = from_hdf5('E:/ETRI/DCASE2018/feature/fold%d_train_%s.hdf5' % (fold_num, ch), 'data')
     # train_x = from_hdf5('F:/DCASE2018/fixed variable/fold%d_train.hdf5' % fold_num, 'data')
-    train_x = from_hdf5('F:/DCASE2018/DA_%s/fold%d_train.hdf5' % (DA_mode, fold_num), 'data')
+    train_x = from_hdf5('F:/DCASE2018/baby_2/fold%d_train.hdf5' % fold_num, 'data')
     train_y = np.zeros([len(train_x), ])
     print(len(train_x))
     print(len(meta_train))
@@ -66,9 +69,10 @@ def model(fold_num, ch):
         train_y[i] = cat(meta_train[i])
 
     # Evaluate set 데이터 불러오기, 정답지 생성
-    te = np.load(path + 'feature_extraction_2/%s/fold%d_%s_evaluate.npy' % (ch, fold_num, ch))
-    evaluate_x = te[:, 0, :, :]
-    del(te)
+    evaluate_x = from_hdf5('F:/DCASE2018/baby_2/fold%d_evaluate.hdf5' % fold_num, 'data')
+    # evaluate_x = np.load('F:/DCASE2018/baby_1/fold%d_evaluate.hdf5' % fold_num, 'data')
+    # evaluate_x = te[:, 0, :, :]
+    # del(te)
     evaluate_y = np.zeros([len(evaluate_x), ])
 
     for j in range(0, len(evaluate_x)-1):
@@ -110,8 +114,8 @@ def model(fold_num, ch):
     model.add(Activation('relu'))
     model.add(GlobalMaxPool2D())
     model.add(Dropout(0.5))
-    model.add(Dense(9, activation='softmax'))
-    # model.add(Dense(9, activation='sigmoid'))
+    model.add(Dense(10, activation='softmax'))
+    # model.add(Dense(10, activation='sigmoid'))
 
     # model = multi_gpu_model(model, gpus=2)
     # optimizer 설정
@@ -128,7 +132,7 @@ def model(fold_num, ch):
     early_stopping = EarlyStopping(monitor='val_loss', patience=10, verbose=2, mode='min')
 
     # Model checkpoint, 가장 좋은 성능일 때의 모델을 저장
-    pa = 'F:/DCASE2018/DA_%s/model/' % DA_mode
+    pa = 'F:/DCASE2018/baby_2/model_softmax/'
     if not os.path.exists(pa):
         os.mkdir(pa)
     model_path = pa + 'fold%d_%s_model.h5' % (fold_num, ch)

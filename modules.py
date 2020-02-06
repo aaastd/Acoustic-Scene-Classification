@@ -123,6 +123,8 @@ def cat(arr):
         return 7
     elif arr[1] == 'working':
         return 8
+    elif arr[1] == 'baby_cry':
+        return 9
     else:
         print("Categorize Error")
 
