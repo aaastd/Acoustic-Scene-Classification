@@ -58,8 +58,6 @@ def model(fold_num, ch):
     # Train set 데이터 불러오기, 정답지 생성
     # train_x = np.load('D:/DCASE 2018 Dataset/Development dataset/DCASE2018-task5-dev/feature_extraction_5/'
     #                   'fold%d_%s_train.npy' % (fold_num, ch))
-    # train_x = from_hdf5('E:/ETRI/DCASE2018/feature/fold%d_train_%s.hdf5' % (fold_num, ch), 'data')
-    # train_x = from_hdf5('F:/DCASE2018/fixed variable/fold%d_train.hdf5' % fold_num, 'data')
     train_x = from_hdf5('F:/DCASE2018/baby_2/fold%d_train.hdf5' % fold_num, 'data')
     train_y = np.zeros([len(train_x), ])
     print(len(train_x))
