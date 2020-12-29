@@ -1,10 +1,10 @@
-## Acoustic-Scene-Classification
+# Acoustic-Scene-Classification
 
-#소개
+##소개
 -
 -Acoustic scene classification은 DCASE 2018 Task5 dataset을 사용하여 학습한 모델을 이용하여 음향 환경을 인지하는 프로그램입니다.
 
-#사전작업
+##사전작업
 -
 
 This code is for ASC(Acoustic scene classification).
