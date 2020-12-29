@@ -7,7 +7,8 @@
 - Python3 환경에서 작동합니다.
 - Focusrite Control을 사용합니다.
 
-This code is for ASC(Acoustic scene classification).
-We tested this code with DCASE 2018 Challenge Task5(Monitoring of domestic activities based on multi-channel acoustics)
+## 사용법
+1. feature_extraction.py 파일을 실행하여 특징추출하여 hdf5파일로 저장합니다.
+1. model.py 파일을 실행하고 특징추출한 hdf5파일을 읽어와서 데이터를 학습시킨 뒤 최적 모델을 h5파일로 저장합니다.
+1. ASC_demo 폴더의 main.py 파일을 실행하고 최적 모델을 사용하여 예측 결과를 확인합니다.
 
-test
